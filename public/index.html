@@ -11,46 +11,110 @@
 
 <a href="new.html"> data receive page</a>
 
+
+<button id="submit">submit</button>
 <script>
     let image64;
     function setup() {
 
-        noCanvas();
-        const video = createCapture(VIDEO);
-        video.size(320, 240);
-        video.loadPixels();
-        image64 = video.canvas.toDataURL();
+        // const video = createCapture(VIDEO);
+        // video.size(320, 240);
+        // video.loadPixels();
+        // image64 = video.canvas.toDataURL();
+
+
+             noCanvas();
+            const video = createCapture(VIDEO);
+            video.size(320, 240);
+
+
+            if ('geolocation' in navigator){
+                console.log('geolocation available');
+
+                navigator.geolocation.getCurrentPosition( async position => {
+                    const lat = position.coords.latitude;
+                    const lon = position.coords.longitude;
+                    console.log(position.coords.latitude);
+                    console.log(position.coords.longitude);
+                    //(position.coords.latitude, position.coords.longitude);
+                    const button = document.getElementById('submit');
+                    button.addEventListener('click', async event => {
+                        video.loadPixels();
+                        image64 = video.canvas.toDataURL();
+                        const data = { lat, lon, image64 };
+                        const options = {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(data)
+                        }
+                        const response = await fetch('/api', options);
+                        const json = await response.json();
+                        console.log(json);
+
+                    })
+
+                    video.loadPixels();
+                    image64 = video.canvas.toDataURL();
+                    const data = { lat, lon, image64 };
+                    const options = {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(data)
+                    }
+                    const response = await fetch('/api', options);
+                    const json = await response.json();
+                    console.log(json);
+
+                });
+
+            }
+            else {
+                console.log('geolocation unavailable')
+            }
+        // const btn = document.createElement('button');
+        // btn.innerHTML = 'Submit';
+        // btn.type = "submit";
+        // btn.name = "formBtn";
+        // document.body.appendChild(btn);
+        // btn.onclick = () => {  getLocation() };
+
+
+
     }
     
-   async  function getLocation() {
-        if ('geolocation' in navigator){
-            console.log('geolocation available');
-
-            navigator.geolocation.getCurrentPosition( async position => {
-                const lat = position.coords.latitude;
-                const lon = position.coords.longitude;
-                console.log(position.coords.latitude);
-                console.log(position.coords.longitude);
-                //(position.coords.latitude, position.coords.longitude);
-                const data = { lat, lon, image64 };
-                const options = {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(data)
-                }
-                const response = await fetch('/api', options);
-                const json = await response.json();
-                console.log(json);
-
-            });
-
-        }
-        else {
-            console.log('geolocation unavailable')
-        }
-    }
+   // async  function getLocation() {
+   //      if ('geolocation' in navigator){
+   //          console.log('geolocation available');
+   //
+   //          navigator.geolocation.getCurrentPosition( async position => {
+   //              const lat = position.coords.latitude;
+   //              const lon = position.coords.longitude;
+   //              console.log(position.coords.latitude);
+   //              console.log(position.coords.longitude);
+   //              //(position.coords.latitude, position.coords.longitude);
+   //              const data = { lat, lon, image64 };
+   //              const options = {
+   //                  method: 'POST',
+   //                  headers: {
+   //                      'Content-Type': 'application/json'
+   //                  },
+   //                  body: JSON.stringify(data)
+   //              }
+   //              const response = await fetch('/api', options);
+   //              const json = await response.json();
+   //              console.log(json);
+   //
+   //          });
+   //
+   //      }
+   //      else {
+   //          console.log('geolocation unavailable')
+   //      }
+   //  }
 // if ('geolocation' in navigator){
 //     console.log('geolocation available');
 //
@@ -79,12 +143,12 @@
 //     console.log('geolocation unavailable')
 // }
 
-const btn = document.createElement('button');
-btn.innerHTML = 'Submit';
-btn.type = "submit";
-btn.name = "formBtn";
-document.body.appendChild(btn);
-btn.onclick = () => { getLocation() };
+// const btn = document.createElement('button');
+// btn.innerHTML = 'Submit';
+// btn.type = "submit";
+// btn.name = "formBtn";
+// document.body.appendChild(btn);
+// btn.onclick = () => { getLocation() };
 </script>
 </body>
 </html>
