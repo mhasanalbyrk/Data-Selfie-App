@@ -2,6 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.3.1/lib/p5.js"></script>
+
     <title>Data App</title>
 </head>
 <body>
@@ -10,6 +12,16 @@
 <a href="new.html"> data receive page</a>
 
 <script>
+    let image64;
+    function setup() {
+
+        noCanvas();
+        const video = createCapture(VIDEO);
+        video.size(320, 240);
+        video.loadPixels();
+        image64 = video.canvas.toDataURL();
+    }
+    
    async  function getLocation() {
         if ('geolocation' in navigator){
             console.log('geolocation available');
@@ -20,7 +32,7 @@
                 console.log(position.coords.latitude);
                 console.log(position.coords.longitude);
                 //(position.coords.latitude, position.coords.longitude);
-                const data = { lat, lon };
+                const data = { lat, lon, image64 };
                 const options = {
                     method: 'POST',
                     headers: {

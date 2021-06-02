@@ -26,7 +26,10 @@
             const dateString = new Date(item.timestamp).toLocaleString();
             date.textContent = dateString;
 
-            root.append(geo, date);
+            const image = document.createElement('img');
+            image.src = item.image64;
+
+            root.append(geo, date, image);
             document.body.append(root);
         }
 
